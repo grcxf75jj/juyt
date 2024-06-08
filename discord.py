@@ -1,19 +1,18 @@
-import discord
+import http.client
+import json
+import time
 
-# Inisialisasi klien Discord
-client = discord.Client()
+with open('./config.json') as f:
+    config_data = json.load(f)
+    channel_id = config_data['Config'][0]['channelid']  # config.json
+    token = config_data['Config'][0]['token']  # config.json
+    message = config_data['Config'][0]['message']  # config.json
 
-@client.event
-async def on_message(message):
-    # Cek apakah pesan yang diterima adalah dari pengguna (bukan dari bot)
-    if message.author != client.user:
-        # Cek apakah pesan mengandung kata kunci tertentu
-        if "halo" in message.content.lower():
-            # Balas dengan pesan tertentu
-            await message.channel.send("Halo! Apa kabar?")
+header_data = { 
+    "Content-Type": "application/json", 
+    "User-Agent": "DiscordBot", 
+    "Authorization": token  
+} 
 
-# Token bot Discord Anda
-TOKEN = 'your_bot_token_here'
-
-# Jalankan klien Discord
-client.run(TOKEN)
+def get_connection(): 
+    return http.client.HTTPSConnection("discord.com", 443) 
